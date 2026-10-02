@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+/*
+  DESIGN SYSTEM — "Situation Room"
+  Dark ink-teal map table, phosphor amber for money/alerts, teal = you, vermilion = enemy.
+  Type: Vazirmatn (UI, Persian) + JetBrains Mono (numbers / callsigns).
+*/
+:root {
+  --bg: oklch(0.15 0.015 225);
+  --bg-2: oklch(0.19 0.02 225);
+  --panel: oklch(0.18 0.02 225 / 0.86);
+  --line: oklch(0.8 0.03 210 / 0.14);
+  --line-strong: oklch(0.8 0.05 210 / 0.3);
+  --text: oklch(0.93 0.01 200);
+  --dim: oklch(0.68 0.02 210);
+  --amber: oklch(0.82 0.15 78);
+  --me: oklch(0.8 0.12 185);
+  --foe: oklch(0.7 0.19 35);
+  --ok: oklch(0.78 0.16 150);
+  --radius: 10px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Vazirmatn", "Segoe UI", Tahoma, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.mono {
+  font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.panel {
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid var(--line-strong);
+  background: oklch(0.24 0.02 225);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+}
+.btn:hover:not(:disabled) {
+  background: oklch(0.29 0.03 225);
+  border-color: var(--amber);
+}
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.btn-primary {
+  background: var(--amber);
+  color: oklch(0.2 0.03 80);
+  border-color: transparent;
+}
+.btn-primary:hover:not(:disabled) {
+  background: oklch(0.88 0.15 82);
+  border-color: transparent;
+}
+.btn-danger {
+  background: oklch(0.38 0.12 28);
+  border-color: oklch(0.6 0.17 30);
+}
+.btn-danger:hover:not(:disabled) {
+  background: oklch(0.45 0.15 28);
+  border-color: var(--foe);
+}
+
+.input {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border-radius: 8px;
+  background: oklch(0.13 0.015 225);
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+  outline: none;
+  font-size: 0.9rem;
+}
+.input:focus {
+  border-color: var(--amber);
+}
+
+.label {
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--dim);
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  border: 1px solid var(--line-strong);
+  color: var(--dim);
+}
+
+.scroll-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: oklch(0.4 0.03 215);
+  border-radius: 4px;
+}
+
+/* radar backdrop for landing */
+.radar {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.radar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(circle at 30% 50%, black 0%, transparent 70%);
+}
+.radar-sweep {
+  position: absolute;
+  width: 1100px;
+  height: 1100px;
+  left: -300px;
+  top: 50%;
+  margin-top: -550px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, oklch(0.8 0.12 185 / 0.22), transparent 25%);
+  animation: sweep 7s linear infinite;
+  mask-image: radial-gradient(circle, black 30%, transparent 70%);
+}
+.radar-ring {
+  position: absolute;
+  left: -300px;
+  top: 50%;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  transform: translate(0, -50%);
+}
+@keyframes sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-red {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.blink {
+  animation: pulse-red 1s ease-in-out infinite;
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.slide-in {
+  animation: slide-in 0.25s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radar-sweep,
+  .blink,
+  .slide-in {
+    animation: none;
+  }
+}
